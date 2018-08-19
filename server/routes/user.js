@@ -1,11 +1,15 @@
 const express = require('express');
-const User = require('../models/user');
-const app = express();
+
+
 const bcrypt = require('bcrypt');
 const _ = require('underscore');
 
+const User = require('../models/user');
+const {verificationToken,verificationAdminRole} = require('../middlewares/authentication')
 
-app.get('/user', function (req, res) {
+const app = express();
+
+app.get('/user',verificationToken,function (req, res) {
     let from = req.query.from || 0;
     from = Number(from);
 
@@ -34,7 +38,7 @@ app.get('/user', function (req, res) {
         });
 });
 
-app.post('/user', function (req, res) {
+app.post('/user',[verificationToken,verificationAdminRole],function (req, res) {
 
     let body = req.body;
 
@@ -61,7 +65,7 @@ app.post('/user', function (req, res) {
 });
 
 
-app.put('/user/:id', function (req, res) {
+app.put('/user/:id', [verificationToken,verificationAdminRole],function (req, res) {
     let id = req.params.id;
     let body = _.pick(req.body, ['name', 'email', 'img', 'role', 'status']);
 
@@ -81,7 +85,7 @@ app.put('/user/:id', function (req, res) {
 
 
 })
-app.delete('/user/:id', function (req, res) {
+app.delete('/user/:id',[verificationToken,verificationAdminRole],function (req, res) {
     let id = req.params.id;
     let changeStatus = {
         status:false
@@ -106,26 +110,6 @@ app.delete('/user/:id', function (req, res) {
             user:deletedUser
         });
     });
-    /*User.findByIdAndRemove(id,(err,deletedUser)=>{
-        if (err) {
-            return res.status(400).json({
-                ok:false,
-                err
-            });
-        }
-        if (!deletedUser) {
-            return res.status(400).json({
-                ok:false,
-                err:{
-                    message: 'User not found'
-                }
-            });
-        }
-        res.json({
-            ok:true,
-            user:deletedUser
-        });
-    })*/
 });
 
 module.exports = app;
