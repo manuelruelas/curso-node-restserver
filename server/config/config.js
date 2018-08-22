@@ -5,7 +5,7 @@ process.env.NODE_ENV = process.env.NODE_ENV || 'dev';
 
 //Expiracion del token
 
-process.env.TOKEN_EXPIRATION = 60*60*24*30;
+process.env.TOKEN_EXPIRATION = '48h';
 
 //SEED
 process.env.SEED = process.env.SEED || "secret-mr"

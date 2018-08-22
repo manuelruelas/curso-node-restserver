@@ -9,7 +9,7 @@ const {verificationToken,verificationAdminRole} = require('../middlewares/authen
 
 const app = express();
 
-app.get('/user',verificationToken,function (req, res) {
+app.get('/user',verificationToken, (req, res)=> {
     let from = req.query.from || 0;
     from = Number(from);
 
@@ -55,7 +55,6 @@ app.post('/user',[verificationToken,verificationAdminRole],function (req, res) {
                 err
             })
         }
-
         res.json({
             ok: true,
             user: userDB
